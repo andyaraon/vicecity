@@ -647,6 +647,14 @@ body.modern .status-bar { font-family:‘Rajdhani’,sans-serif; font-size:.75re
 50%    { box-shadow:0 0 32px rgba(255,45,120,.55); }
 }
 
+/* Hide all native video controls + iOS play button overlay */
+video::-webkit-media-controls                       { display:none !important; }
+video::-webkit-media-controls-enclosure            { display:none !important; }
+video::-webkit-media-controls-panel                { display:none !important; }
+video::-webkit-media-controls-play-button          { display:none !important; }
+video::-webkit-media-controls-start-playback-button{ display:none !important; }
+video::-webkit-media-controls-overlay-play-button  { display:none !important; }
+
 /* ── MUTE BUTTON ──────────────────────────────────────────── */
 .mute-btn{
 background:transparent;
@@ -668,7 +676,7 @@ line-height:1;
 
   <!-- 80s video background -->
 
-  <video id="bg-video" class="bg-video" autoplay muted loop playsinline>
+  <video id="bg-video" class="bg-video" autoplay muted loop playsinline webkit-playsinline>
     <source src="./assets/bg-80s.mp4" type="video/mp4">
   </video>
 
@@ -1168,7 +1176,29 @@ line-height:1;
     wireUpMode(R, 'retro')
     wireUpMode(M, 'modern')
 
-    // ── BACKGROUND MUSIC ─────────────────────────────────────────────────────
+    // ── FORCE VIDEO AUTOPLAY (fixes iOS Safari play button glitch) ───────────
+    const bgVideo = document.getElementById('bg-video')
+
+    // Try immediately
+    bgVideo.muted = true
+    bgVideo.play().catch(() => {})
+
+    // Try again once DOM is fully ready
+    window.addEventListener('load', () => {
+      bgVideo.muted = true
+      bgVideo.play().catch(() => {})
+    })
+
+    // Try on first touch (iOS fallback)
+    document.addEventListener('touchstart', () => {
+      bgVideo.muted = true
+      bgVideo.play().catch(() => {})
+    }, { once: true })
+
+    document.addEventListener('click', () => {
+      bgVideo.muted = true
+      bgVideo.play().catch(() => {})
+    }, { once: true })
     const audio   = document.getElementById('bg-audio')
     const muteBtn = document.getElementById('mute-btn')
     let audioStarted = false
