@@ -636,6 +636,21 @@ body.modern .status-bar { font-family:‘Rajdhani’,sans-serif; font-size:.75re
 50%    { box-shadow:0 0 32px rgba(255,45,120,.55); }
 }
 
+/* ── MUTE BUTTON ──────────────────────────────────────────── */
+.mute-btn{
+background:transparent;
+border:none;
+cursor:pointer;
+font-size:1.1rem;
+opacity:.55;
+transition:opacity .3s ease, transform .2s ease;
+flex-shrink:0;
+padding:4px 6px;
+border-radius:4px;
+line-height:1;
+}
+.mute-btn:hover{ opacity:1; transform:scale(1.15); }
+
   </style>
 </head>
 <body class="retro">
@@ -645,6 +660,12 @@ body.modern .status-bar { font-family:‘Rajdhani’,sans-serif; font-size:.75re
   <div class="vhs-grain"></div>
   <div class="vhs-line"></div>
   <div class="flicker"></div>
+
+  <!-- Background audio -->
+
+  <audio id="bg-audio" loop preload="auto">
+    <source src="./assets/gta.mp3" type="audio/mpeg">
+  </audio>
 
   <!-- ================================================ NAV -->
 
@@ -665,6 +686,8 @@ body.modern .status-bar { font-family:‘Rajdhani’,sans-serif; font-size:.75re
   </label>
   <span class="tlbl" id="lb-m">MODERN</span>
 </div>
+
+<button class="mute-btn" id="mute-btn" title="Toggle music">🔊</button>
 
 <a href="#" class="nav-btn">BUY $VICE</a>
 ```
@@ -1128,7 +1151,42 @@ body.modern .status-bar { font-family:‘Rajdhani’,sans-serif; font-size:.75re
     wireUpMode(R, 'retro')
     wireUpMode(M, 'modern')
 
-    // ── Share helpers ─────────────────────────────────────────────────────────
+    // ── BACKGROUND MUSIC ─────────────────────────────────────────────────────
+    const audio   = document.getElementById('bg-audio')
+    const muteBtn = document.getElementById('mute-btn')
+    let audioStarted = false
+    let muted = false
+
+    audio.volume = 0.35   // start at 35% volume — not overwhelming
+
+    // Start on first interaction anywhere on the page
+    function startAudio() {
+      if (audioStarted) return
+      audioStarted = true
+      audio.play().catch(() => {})   // catch needed — some browsers still block
+      document.removeEventListener('click',     startAudio)
+      document.removeEventListener('touchstart', startAudio)
+      document.removeEventListener('keydown',    startAudio)
+    }
+
+    document.addEventListener('click',      startAudio)
+    document.addEventListener('touchstart', startAudio)
+    document.addEventListener('keydown',    startAudio)
+
+    // Mute toggle button
+    muteBtn.addEventListener('click', (e) => {
+      e.stopPropagation()   // don't count this as the startAudio click
+      muted = !muted
+      audio.muted   = muted
+      muteBtn.textContent = muted ? '🔇' : '🔊'
+
+      // If mute button is first interaction, also start the audio unmuted next time
+      if (!audioStarted) {
+        audioStarted = true
+        audio.play().catch(() => {})
+        if (muted) audio.muted = true
+      }
+    })
     function shareX(imageUrl) {
       const text = encodeURIComponent('I just got Vice City\'d with $VICE on Solana 🌴🎮 Transform yourself 👇')
       window.open(
