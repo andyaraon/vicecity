@@ -139,12 +139,24 @@ text-align:center;padding:100px 40px 60px;position:relative;
 }
 
 .title-r{
-font-family:‘Pacifico’,cursive;line-height:1.05;
-color:var(–c1);
-text-shadow:0 0 14px var(–c1),0 0 36px var(–c1),0 0 80px var(–c1),4px 4px 0 rgba(0,0,0,.5);
+font-family:‘Pacifico’,cursive;
+line-height:1.0;
+color:#FF1A6E;
+font-style:italic;
+letter-spacing:-1px;
+transform:skewX(-4deg);
+text-shadow:
+0 0 8px #FF2D78,
+0 0 28px #FF2D78,
+0 0 65px #FF2D78,
+0 0 110px rgba(255,45,120,.45),
+3px 3px 0 #8B003A,
+5px 5px 0 #6A0028,
+7px 7px 0 #45001A,
+9px 9px 18px rgba(0,0,0,.85);
 animation:fUp .7s ease both;
 }
-body.retro  .title-r{font-size:clamp(3.5rem,9vw,7rem);display:block;}
+body.retro  .title-r{font-size:clamp(3.8rem,10vw,7.5rem);display:block;}
 body.modern .title-r{display:none;}
 
 .title-m{
@@ -187,13 +199,55 @@ body.modern .luxury-btn::before{content:’’;position:absolute;top:0;left:-100
 body.modern .luxury-btn:hover::before{left:150%;}
 body.modern .luxury-btn:hover{transform:translateY(-3px);box-shadow:0 0 38px rgba(245,208,96,.55),0 14px 36px rgba(0,0,0,.5);}
 
-.scroll-hint{
-position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+/* Remove scroll hint */
+.scroll-hint{ display:none !important; }
+
+/* ── CA ADDRESS BOX ──────────────────────────────────────────── */
+.ca-box{
 display:flex;flex-direction:column;align-items:center;gap:6px;
-opacity:.4;animation:bounce 2s ease-in-out infinite;
+padding:14px 28px;border-radius:6px;cursor:pointer;
+animation:fUp .7s .22s ease both;
+transition:all .3s ease;
+position:relative;overflow:hidden;
+user-select:none;
 }
-body.retro  .scroll-hint{font-family:‘VT323’,monospace;font-size:1rem;color:var(–c2);}
-body.modern .scroll-hint{font-family:‘Rajdhani’,sans-serif;font-size:.7rem;letter-spacing:3px;color:rgba(255,255,255,.5);}
+body.retro .ca-box{
+background:rgba(0,0,0,.55);
+border:1px solid rgba(255,45,120,.4);
+box-shadow:0 0 18px rgba(255,45,120,.15);
+}
+body.retro .ca-box:hover{
+border-color:#FF2D78;
+box-shadow:0 0 30px rgba(255,45,120,.45);
+}
+body.modern .ca-box{
+background:rgba(0,0,0,.45);
+border:1px solid rgba(255,255,255,.12);
+box-shadow:0 0 18px rgba(255,92,43,.1);
+}
+body.modern .ca-box:hover{
+border-color:rgba(255,92,43,.6);
+box-shadow:0 0 28px rgba(255,92,43,.35);
+}
+.ca-label{
+letter-spacing:4px;
+transition:all .5s ease;
+}
+body.retro  .ca-label{font-family:‘Press Start 2P’,monospace;font-size:.3rem;color:rgba(255,45,120,.6);}
+body.modern .ca-label{font-family:‘Rajdhani’,sans-serif;font-size:.6rem;font-weight:700;color:rgba(255,255,255,.35);}
+.ca-addr{
+word-break:break-all;text-align:center;line-height:1.6;
+transition:all .5s ease;
+}
+body.retro  .ca-addr{font-family:‘VT323’,monospace;font-size:1.05rem;color:#00F0FF;letter-spacing:1px;}
+body.modern .ca-addr{font-family:‘Rajdhani’,sans-serif;font-size:.82rem;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:.5px;}
+.ca-copy-lbl{
+letter-spacing:3px;transition:all .3s ease;
+}
+body.retro  .ca-copy-lbl{font-family:‘Press Start 2P’,monospace;font-size:.28rem;color:rgba(255,230,0,.5);}
+body.modern .ca-copy-lbl{font-family:‘Rajdhani’,sans-serif;font-size:.62rem;font-weight:700;color:rgba(255,255,255,.28);}
+.ca-box:hover .ca-copy-lbl{ color:#FFE600; }
+.ca-copied{ color:#00FF88 !important; }
 @keyframes bounce{0%,100%{transform:translateX(-50%)translateY(0);}50%{transform:translateX(-50%)translateY(8px);}}
 @keyframes fUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
 
@@ -202,9 +256,8 @@ SHARED SECTION STYLES
 ============================================================ */
 .sec-wrap{
 padding:80px 52px;
-background:rgba(0,0,0,.28);
-backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-border-top:1px solid rgba(255,255,255,.06);
+background:rgba(0,0,0,.06);
+border-top:1px solid rgba(255,255,255,.05);
 }
 
 .sh{font-family:var(–df);color:var(–c1);text-align:center;margin-bottom:12px;transition:all .5s ease;}
@@ -624,10 +677,10 @@ body.modern .status-bar { font-family:‘Rajdhani’,sans-serif; font-size:.75re
     <span class="title-r">Vice City</span>
     <span class="title-m">VICE<br>CITY</span>
     <p class="hero-sub">Two eras. One city. Your legend.</p>
-    <a href="#" class="luxury-btn">BUY $VICE</a>
-    <div class="scroll-hint">
-      <span>SCROLL</span>
-      <span>↓</span>
+    <div class="ca-box" id="ca-box" onclick="copyCa()">
+      <span class="ca-label">CONTRACT ADDRESS</span>
+      <span class="ca-addr">GmrDgvX7rjAJzqcAuP1cSd3RXeeF1Pcw2nnVubgiC5oy</span>
+      <span class="ca-copy-lbl" id="ca-copy-lbl">CLICK TO COPY</span>
     </div>
   </section>
 
@@ -728,7 +781,7 @@ body.modern .status-bar { font-family:‘Rajdhani’,sans-serif; font-size:.75re
       </div>
     </div>
 
-    <a href="#" class="main-buy">BUY $VICE</a>
+    <a href="https://jup.ag/swap/SOL-GmrDgvX7rjAJzqcAuP1cSd3RXeeF1Pcw2nnVubgiC5oy" target="_blank" rel="noopener" class="main-buy">BUY $VICE</a>
   </div>
 
   <!-- ═══════════ MODERN STACK ═══════════ -->
@@ -779,7 +832,7 @@ body.modern .status-bar { font-family:‘Rajdhani’,sans-serif; font-size:.75re
         </div>
       </div>
     </div>
-    <a href="#" class="main-buy-modern">BUY $VICE</a>
+    <a href="https://jup.ag/swap/SOL-GmrDgvX7rjAJzqcAuP1cSd3RXeeF1Pcw2nnVubgiC5oy" target="_blank" rel="noopener" class="main-buy-modern">BUY $VICE</a>
   </div>
 
 </div>
@@ -854,6 +907,36 @@ body.modern .status-bar { font-family:‘Rajdhani’,sans-serif; font-size:.75re
     }
 
     tog.addEventListener('change', () => switchMode(tog.checked))
+
+
+
+    // ── CA COPY ───────────────────────────────────────────────────────────────
+    function copyCa() {
+      const ca  = 'GmrDgvX7rjAJzqcAuP1cSd3RXeeF1Pcw2nnVubgiC5oy'
+      const lbl = document.getElementById('ca-copy-lbl')
+      navigator.clipboard.writeText(ca).then(() => {
+        lbl.textContent = 'COPIED ✓'
+        lbl.classList.add('ca-copied')
+        setTimeout(() => {
+          lbl.textContent = 'CLICK TO COPY'
+          lbl.classList.remove('ca-copied')
+        }, 2000)
+      }).catch(() => {
+        // Fallback for older browsers
+        const el = document.createElement('textarea')
+        el.value = ca
+        document.body.appendChild(el)
+        el.select()
+        document.execCommand('copy')
+        document.body.removeChild(el)
+        lbl.textContent = 'COPIED ✓'
+        lbl.classList.add('ca-copied')
+        setTimeout(() => {
+          lbl.textContent = 'CLICK TO COPY'
+          lbl.classList.remove('ca-copied')
+        }, 2000)
+      })
+    }
 
 
     // ── AI TRANSFORM ENGINE ───────────────────────────────────────────────────
