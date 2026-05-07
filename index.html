@@ -1025,6 +1025,35 @@ line-height:1;
 
     // ── Utilities ─────────────────────────────────────────────────────────────
 
+    // Compress + resize image using canvas before sending (keeps under 6MB Netlify limit)
+    function compressImage(file, maxPx = 1024, quality = 0.82) {
+      return new Promise((resolve, reject) => {
+        const img = new Image()
+        const url = URL.createObjectURL(file)
+        img.onload = () => {
+          // Calculate new dimensions keeping aspect ratio
+          let { width, height } = img
+          if (width > height && width > maxPx) {
+            height = Math.round(height * maxPx / width)
+            width  = maxPx
+          } else if (height > maxPx) {
+            width  = Math.round(width * maxPx / height)
+            height = maxPx
+          }
+          const canvas = document.createElement('canvas')
+          canvas.width  = width
+          canvas.height = height
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height)
+          URL.revokeObjectURL(url)
+          // Return base64 string (no data-URL prefix)
+          const dataUrl = canvas.toDataURL('image/jpeg', quality)
+          resolve(dataUrl.split(',')[1])
+        }
+        img.onerror = reject
+        img.src = url
+      })
+    }
+
     // Read File → base64 string (no data-URL prefix)
     function fileToBase64(file) {
       return new Promise((resolve, reject) => {
@@ -1084,14 +1113,14 @@ line-height:1;
       setStatus(els, 'UPLOADING IMAGE...', 'loading')
 
       try {
-        // 1 — read file as base64
-        const imageBase64 = await fileToBase64(file)
+        // 1 — compress + resize before sending (prevents 502 from Netlify 6MB body limit)
+        const imageBase64 = await compressImage(file)
 
         // 2 — submit job to our serverless function
         const submitRes = await fetch('/.netlify/functions/transform', {
           method : 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body   : JSON.stringify({ imageBase64, mimeType: file.type, mode }),
+          body   : JSON.stringify({ imageBase64, mimeType: 'image/jpeg', mode }),
         })
 
         if (!submitRes.ok) {
