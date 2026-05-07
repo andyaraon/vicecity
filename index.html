@@ -1071,19 +1071,18 @@ line-height:1;
     }
 
     // Poll fal.ai queue until COMPLETED or error
-    async function pollResult(requestId, onStatus, intervalMs = 2500, maxAttempts = 40) {
+    async function pollResult(statusUrl, responseUrl, onStatus, intervalMs = 3000, maxAttempts = 40) {
       for (let i = 0; i < maxAttempts; i++) {
         await new Promise(r => setTimeout(r, intervalMs))
 
-        const res  = await fetch(`/.netlify/functions/poll?requestId=${requestId}`)
+        const res  = await fetch('/.netlify/functions/poll?statusUrl=' + encodeURIComponent(statusUrl) + '&responseUrl=' + encodeURIComponent(responseUrl))
         const data = await res.json()
 
         if (data.status === 'COMPLETED') return data.imageUrl
         if (data.status === 'FAILED')    throw new Error('Generation failed on fal.ai')
 
-        // Animate the dots so user knows it's alive
         const dots = '.'.repeat((i % 3) + 1)
-        onStatus(`TRANSFORMING${dots}`, 'loading')
+        onStatus('TRANSFORMING' + dots, 'loading')
       }
       throw new Error('Timed out — try again')
     }
@@ -1128,12 +1127,13 @@ line-height:1;
           throw new Error(errData.error || `Submit failed (${submitRes.status})`)
         }
 
-        const { requestId } = await submitRes.json()
+        const { requestId, statusUrl, responseUrl } = await submitRes.json()
         setStatus(els, 'IN QUEUE...', 'loading')
 
-        // 3 — poll until done
+        // 3 — poll until done using fal.ai's own status/response URLs
         const outputUrl = await pollResult(
-          requestId,
+          statusUrl,
+          responseUrl,
           (msg, type) => setStatus(els, msg, type)
         )
 
