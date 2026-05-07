@@ -1070,24 +1070,16 @@ line-height:1;
       els.status.className   = `status-bar s-${type}`
     }
 
-    // Poll fal.ai directly from browser — no Netlify function needed
+    // Poll via Netlify function (avoids CORS — server calls fal.ai directly)
     async function pollResult(statusUrl, responseUrl, onStatus, intervalMs = 3000, maxAttempts = 40) {
       for (let i = 0; i < maxAttempts; i++) {
         await new Promise(r => setTimeout(r, intervalMs))
 
-        const res  = await fetch(statusUrl)
+        const res  = await fetch('/.netlify/functions/poll?statusUrl=' + encodeURIComponent(statusUrl) + '&responseUrl=' + encodeURIComponent(responseUrl))
         const data = await res.json()
 
-        if (data.status === 'COMPLETED') {
-          // Fetch the result directly from fal.ai
-          const resultRes  = await fetch(responseUrl)
-          const resultData = await resultRes.json()
-          const imageUrl   = resultData.images && resultData.images[0] ? resultData.images[0].url : null
-          if (!imageUrl) throw new Error('No image in result')
-          return imageUrl
-        }
-
-        if (data.status === 'FAILED') throw new Error('Generation failed on fal.ai')
+        if (data.status === 'COMPLETED') return data.imageUrl
+        if (data.status === 'FAILED')    throw new Error('Generation failed on fal.ai')
 
         const dots = '.'.repeat((i % 3) + 1)
         onStatus('TRANSFORMING' + dots, 'loading')
