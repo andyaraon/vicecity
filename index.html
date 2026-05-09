@@ -548,14 +548,14 @@ COMMUNITY/CONTACT SECTION
 ============================================================ */
 .c-inner{text-align:center;}
 .c-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:42px;}
-.c-lnk{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;text-decoration:none;border-radius:7px;font-family:var(–df);transition:all .3s ease;}
+.c-lnk{display:inline-flex;align-items:center;gap:10px;padding:16px 28px;text-decoration:none;border-radius:7px;font-family:var(–df);transition:all .3s ease;}
 body.retro  .c-lnk{font-size:.46rem;border:2px solid var(–c1);color:var(–c1);background:transparent;box-shadow:0 0 12px rgba(255,45,120,.18);letter-spacing:2px;}
 body.retro  .c-lnk:hover{background:rgba(255,45,120,.1);box-shadow:0 0 30px rgba(255,45,120,.45);}
 body.modern .c-lnk{font-size:.55rem;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#fff;letter-spacing:3px;}
 body.modern .c-lnk:hover{border-color:var(–c1);color:var(–c1);}
-.bdg{padding:2px 7px;border-radius:3px;}
-body.retro  .bdg{font-family:‘Press Start 2P’,monospace;font-size:.28rem;background:var(–c3);color:#000;}
-body.modern .bdg{font-family:‘Rajdhani’,sans-serif;font-size:.55rem;font-weight:700;background:rgba(255,255,255,.1);color:rgba(255,255,255,.44);letter-spacing:1px;}
+/* icon-only X and TG community links */
+.c-lnk.icon-only { padding:16px 20px; }
+.c-lnk svg { flex-shrink:0; }
 
 /* ============================================================
 FOOTER
@@ -856,15 +856,17 @@ video::-webkit-media-controls-overlay-play-button  { display:none !important; }
 background:transparent;
 border:none;
 cursor:pointer;
-font-size:1.1rem;
 opacity:.55;
 transition:opacity .3s ease, transform .2s ease;
 flex-shrink:0;
 padding:4px 6px;
 border-radius:4px;
 line-height:1;
+color:#fff;
+display:flex;align-items:center;justify-content:center;
 }
 .mute-btn:hover{ opacity:1; transform:scale(1.15); }
+.mute-btn svg { width:18px;height:18px;display:block; }
 
 /* ── HERO LOGO IMAGES ───────────────────────────────────────── */
 .hero-logo {
@@ -934,21 +936,27 @@ display:block;
 filter:drop-shadow(0 0 4px rgba(255,92,43,.35));
 }
 
+/* ── GLOBAL IMAGE — kill alt text / loading placeholder text ── */
+img { color: transparent; }
+
 /* ── SOCIAL BUTTONS (hero, under CA) ───────────────────────── */
 .hero-socials {
-display:flex;gap:14px;justify-content:center;
+display:flex;gap:10px;justify-content:center;
 margin-top:20px;
 animation:fUp .7s .35s ease both;
 }
 .soc-btn {
-display:inline-flex;align-items:center;justify-content:center;gap:8px;
-padding:11px 22px;border-radius:6px;
+display:inline-flex;align-items:center;justify-content:center;gap:7px;
+padding:11px 16px;border-radius:6px;
 text-decoration:none;cursor:pointer;
 font-family:‘Rajdhani’,sans-serif;font-size:.8rem;font-weight:700;
 letter-spacing:2px;border:none;
 transition:all .3s ease;
 position:relative;overflow:hidden;
 }
+/* icon-only X and TG = square-ish */
+.soc-btn.x-btn,
+.soc-btn.tg-btn { padding:11px 13px; }
 .soc-btn::before{
 content:’’;position:absolute;top:0;left:-100%;width:60%;height:100%;
 background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
@@ -981,7 +989,7 @@ box-shadow:0 0 14px rgba(0,220,130,.1);
 .soc-btn.dex-btn:hover { border-color:#00dc82; box-shadow:0 0 24px rgba(0,220,130,.35); transform:translateY(-2px); }
 
 /* SVG icon sizing inside buttons */
-.soc-btn svg { width:16px;height:16px;flex-shrink:0; }
+.soc-btn svg { width:18px;height:18px;flex-shrink:0; }
 
 /* ── GLASS CARDS ────────────────────────────────────────────── */
 .glass-card {
@@ -1124,13 +1132,11 @@ display:none !important;
 
   <!-- Social buttons -->
   <div class="cs-socials">
-    <a href="#" class="soc-btn x-btn">
-      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-      TWITTER
+    <a href="#" class="soc-btn x-btn" title="Twitter / X">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
     </a>
-    <a href="#" class="soc-btn tg-btn">
-      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-      TELEGRAM
+    <a href="#" class="soc-btn tg-btn" title="Telegram">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
     </a>
     <a href="https://dexscreener.com/solana/3FmyGrJPLDVgDVwRVenuaq1xBwkZauP5TSskHRz72wSS" target="_blank" rel="noopener" class="soc-btn dex-btn">
       <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M3 3h7v2H5v14h14v-5h2v7H3V3zm11 0h7v7h-2V6.414l-9.293 9.293-1.414-1.414L17.586 5H14V3z"/></svg>
@@ -1180,7 +1186,7 @@ display:none !important;
 <div class="tog-group">
   <!-- 80s Vice real PNG logo -->
   <div class="logo-80s on" id="lb-r">
-    <img src="./assets/logo-80s.png" alt="80s Vice">
+    <img src="./assets/logo-80s.png" alt="" fetchpriority="high" loading="eager" decoding="async">
   </div>
 
   <label class="tog-pill">
@@ -1190,11 +1196,17 @@ display:none !important;
 
   <!-- Modern Vice real PNG logo -->
   <div class="logo-modern" id="lb-m">
-    <img src="./assets/logo-modern.png" alt="Modern Vice" class="logo-modern-png-nav">
+    <img src="./assets/logo-modern.png" alt="" class="logo-modern-png-nav" fetchpriority="high" loading="eager" decoding="async">
   </div>
 </div>
 
-<button class="mute-btn" id="mute-btn" title="Toggle music">🔊</button>
+<button class="mute-btn" id="mute-btn" title="Toggle music">
+  <svg id="mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+    <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+  </svg>
+</button>
 
 <a href="#" class="nav-btn">BUY $VICE</a>
 ```
@@ -1207,11 +1219,11 @@ display:none !important;
 
 ```
 <!-- 80s mode hero logo -->
-<img src="./assets/logo-80s.png" class="hero-logo hero-logo-r" alt="80s Vice" fetchpriority="high" loading="eager" decoding="async">
+<img src="./assets/logo-80s.png" class="hero-logo hero-logo-r" alt="" fetchpriority="high" loading="eager" decoding="async">
 
-<!-- Modern mode hero logo — real PNG with mix-blend-mode multiply -->
+<!-- Modern mode hero logo -->
 <div class="hero-logo hero-logo-m">
-  <img src="./assets/logo-modern.png" alt="Modern Vice" class="logo-modern-png-hero" fetchpriority="high" loading="eager" decoding="async">
+  <img src="./assets/logo-modern.png" alt="" class="logo-modern-png-hero" fetchpriority="high" loading="eager" decoding="async">
 </div>
 
 <p class="hero-sub">Two eras. One city. Your legend.</p>
@@ -1223,16 +1235,14 @@ display:none !important;
 
 <!-- Social links -->
 <div class="hero-socials">
-  <a href="#" class="soc-btn x-btn">
+  <a href="#" class="soc-btn x-btn" title="Twitter / X">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-    TWITTER
   </a>
-  <a href="#" class="soc-btn tg-btn">
+  <a href="#" class="soc-btn tg-btn" title="Telegram">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-    TELEGRAM
   </a>
   <a href="https://dexscreener.com/solana/3FmyGrJPLDVgDVwRVenuaq1xBwkZauP5TSskHRz72wSS" target="_blank" rel="noopener" class="soc-btn dex-btn">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M3 3h7v2H5v14h14v-5h2v7H3V3zm11 0h7v7h-2V6.414l-9.293 9.293-1.414-1.414L17.586 5H14V3z"/></svg>
     DEX
   </a>
 </div>
@@ -1264,7 +1274,9 @@ display:none !important;
         <!-- Upload box -->
         <div class="up-box" id="retro-up-box">
           <img id="retro-preview" class="up-preview" alt="preview">
-          <div class="box-ic" id="retro-up-ic">📷</div>
+          <div class="box-ic" id="retro-up-ic">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
           <div class="box-tx" id="retro-up-tx">UPLOAD<br>YOUR PHOTO</div>
         </div>
 
@@ -1273,7 +1285,9 @@ display:none !important;
         <!-- Output box -->
         <div class="out-box" id="retro-out-box">
           <img id="retro-result" class="out-result" alt="result">
-          <div class="box-ic" id="retro-out-ic">🎮</div>
+          <div class="box-ic" id="retro-out-ic">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
           <div class="box-tx" id="retro-out-tx">YOUR VICE<br>CITY SELF</div>
           <span class="wm">$VICE</span>
         </div>
@@ -1316,7 +1330,9 @@ display:none !important;
             <!-- Upload box -->
             <div class="ph-up" id="modern-up-box">
               <img id="modern-preview" class="up-preview" alt="preview">
-              <div class="ph-ic" id="modern-up-ic">📷</div>
+              <div class="ph-ic" id="modern-up-ic">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </div>
               <div class="ph-tx" id="modern-up-tx">Upload Your Photo</div>
             </div>
 
@@ -1325,7 +1341,9 @@ display:none !important;
             <!-- Output box -->
             <div class="ph-out" id="modern-out-box">
               <img id="modern-result" class="out-result" alt="result">
-              <div class="ph-ic" id="modern-out-ic">🏙️</div>
+              <div class="ph-ic" id="modern-out-ic">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              </div>
               <div class="ph-tx" id="modern-out-tx">Your Vice City Self</div>
               <span class="ph-wm">$VICE</span>
             </div>
@@ -1383,17 +1401,15 @@ display:none !important;
           <h2 class="sh">JOIN THE CITY</h2>
           <div class="rule"></div>
           <div class="c-row">
-            <a href="#" class="c-lnk">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              TWITTER <span class="bdg">SOON</span>
+            <a href="#" class="c-lnk icon-only" title="Twitter / X">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             </a>
-            <a href="#" class="c-lnk">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-              TELEGRAM <span class="bdg">SOON</span>
+            <a href="#" class="c-lnk icon-only" title="Telegram">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
             </a>
             <a href="https://dexscreener.com/solana/3FmyGrJPLDVgDVwRVenuaq1xBwkZauP5TSskHRz72wSS" target="_blank" rel="noopener" class="c-lnk">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h7v2H5v14h14v-5h2v7H3V3zm11 0h7v7h-2V6.414l-9.293 9.293-1.414-1.414L17.586 5H14V3z"/></svg>
-              DEX SCREENER
+              DEX
             </a>
           </div>
         </div>
@@ -1622,7 +1638,7 @@ display:none !important;
       els.outBox.classList.add('pulsing')
 
       // Show spinner state in out-box
-      els.outIc.textContent  = '⏳'
+      els.outIc.innerHTML    = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'
       els.outTx.textContent  = mode === 'retro' ? 'LOADING...' : 'Loading...'
       els.outIc.style.display = ''
       els.outTx.style.display = ''
@@ -1670,7 +1686,9 @@ display:none !important;
         setStatus(els, `ERROR: ${err.message}`, 'error')
 
         // Restore out-box default state
-        els.outIc.textContent  = mode === 'retro' ? '🎮' : '🏙️'
+        els.outIc.innerHTML  = mode === 'retro'
+          ? '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>'
+          : '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>'
         els.outTx.textContent  = mode === 'retro' ? 'YOUR VICE\nCITY SELF' : 'Your Vice City Self'
         els.outIc.style.display = ''
         els.outTx.style.display = ''
@@ -1704,7 +1722,7 @@ display:none !important;
 
         // Reset output box if user picks a new photo after a previous result
         els.result.style.display = 'none'
-        els.outIc.textContent    = mode === 'retro' ? '🎮' : '🏙️'
+        els.outIc.innerHTML      = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>'
         els.outTx.textContent    = mode === 'retro' ? 'YOUR VICE\nCITY SELF' : 'Your Vice City Self'
         els.outIc.style.display  = ''
         els.outTx.style.display  = ''
@@ -1763,12 +1781,15 @@ display:none !important;
 
     // Mute toggle button
     muteBtn.addEventListener('click', (e) => {
-      e.stopPropagation()   // don't count this as the startAudio click
+      e.stopPropagation()
       muted = !muted
-      audio.muted   = muted
-      muteBtn.textContent = muted ? '🔇' : '🔊'
-
-      // If mute button is first interaction, also start the audio unmuted next time
+      audio.muted = muted
+      const icon = document.getElementById('mute-icon')
+      if (muted) {
+        icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15" stroke="currentColor" stroke-width="2"/><line x1="17" y1="9" x2="23" y2="15" stroke="currentColor" stroke-width="2"/>'
+      } else {
+        icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>'
+      }
       if (!audioStarted) {
         audioStarted = true
         audio.play().catch(() => {})
