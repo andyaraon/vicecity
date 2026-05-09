@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>$VICE | Vice City on Solana</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Press+Start+2P&family=VT323&family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="./assets/coming-soon.png" fetchpriority="high">
   <style>
 
 /* ============================================================
@@ -1073,6 +1074,15 @@ display:flex;gap:14px;justify-content:center;
 animation:fUp .8s .25s ease both;
 }
 
+/* Lock body when coming soon is active — hide ALL main site content */
+body.cs-active {
+overflow:hidden;
+height:100vh;
+}
+body.cs-active > *:not(#cs-overlay) {
+display:none !important;
+}
+
   </style>
 </head>
 <body class="retro">
@@ -1084,7 +1094,7 @@ animation:fUp .8s .25s ease both;
   <div id="cs-overlay" class="cs-overlay">
     <div class="cs-content">
       <!-- Main PNG -->
-      <img src="./assets/coming-soon.png" class="cs-logo" alt="Something Coming Soon">
+      <img src="./assets/coming-soon.png" class="cs-logo" alt="Something Coming Soon" fetchpriority="high" loading="eager" decoding="sync">
 
 ```
   <!-- GTA-style loading bar -->
@@ -1393,6 +1403,9 @@ animation:fUp .8s .25s ease both;
     if (urlParams.get('preview') === 'vice2025') {
       const csEl = document.getElementById('cs-overlay')
       if (csEl) csEl.style.display = 'none'
+    } else {
+      // Lock body — hide entire main site, only show CS overlay
+      document.body.classList.add('cs-active')
     }
 
     // GTA-style loading tips — rotate every 3.5s
