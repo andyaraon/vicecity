@@ -5,8 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>$VICE | Vice City on Solana</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Press+Start+2P&family=VT323&family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="./assets/coming-soon.png" fetchpriority="high">
+  <link rel="preload" as="image" href="./assets/logo-80s.png" fetchpriority="high">
+  <link rel="preload" as="image" href="./assets/logo-modern.png" fetchpriority="high">
   <style>
 
 /* ============================================================
@@ -1070,8 +1074,21 @@ transition:opacity .5s ease;
 
 /* Social buttons on CS page */
 .cs-socials {
-display:flex;gap:14px;justify-content:center;
+display:flex;gap:10px;justify-content:center;
 animation:fUp .8s .25s ease both;
+padding:0 16px;
+flex-wrap:wrap;
+width:100%;
+}
+.cs-socials .soc-btn {
+padding:10px 18px;
+font-size:.75rem;
+letter-spacing:1.5px;
+flex:0 0 auto;
+}
+@media(max-width:420px){
+.cs-socials { gap:8px; padding:0 12px; }
+.cs-socials .soc-btn { padding:9px 14px; font-size:.7rem; letter-spacing:1px; }
 }
 
 /* Lock body when coming soon is active — hide ALL main site content */
@@ -1085,7 +1102,7 @@ display:none !important;
 
   </style>
 </head>
-<body class="retro">
+<body class="retro cs-active">
 
   <!-- ================================================ COMING SOON OVERLAY -->
 
@@ -1102,7 +1119,7 @@ display:none !important;
     <div class="cs-loading-track">
       <div class="cs-loading-bar"></div>
     </div>
-    <div class="cs-tip" id="cs-tip">Initializing the neon grid...</div>
+    <div class="cs-tip" id="cs-tip"></div>
   </div>
 
   <!-- Social buttons -->
@@ -1190,11 +1207,11 @@ display:none !important;
 
 ```
 <!-- 80s mode hero logo -->
-<img src="./assets/logo-80s.png" class="hero-logo hero-logo-r" alt="80s Vice">
+<img src="./assets/logo-80s.png" class="hero-logo hero-logo-r" alt="80s Vice" fetchpriority="high" loading="eager" decoding="async">
 
 <!-- Modern mode hero logo — real PNG with mix-blend-mode multiply -->
 <div class="hero-logo hero-logo-m">
-  <img src="./assets/logo-modern.png" alt="Modern Vice" class="logo-modern-png-hero">
+  <img src="./assets/logo-modern.png" alt="Modern Vice" class="logo-modern-png-hero" fetchpriority="high" loading="eager" decoding="async">
 </div>
 
 <p class="hero-sub">Two eras. One city. Your legend.</p>
@@ -1401,11 +1418,9 @@ display:none !important;
     // ── COMING SOON — hide if preview key present ────────────────────────────
     const urlParams = new URLSearchParams(window.location.search)
     if (urlParams.get('preview') === 'vice2025') {
+      document.body.classList.remove('cs-active')
       const csEl = document.getElementById('cs-overlay')
       if (csEl) csEl.style.display = 'none'
-    } else {
-      // Lock body — hide entire main site, only show CS overlay
-      document.body.classList.add('cs-active')
     }
 
     // GTA-style loading tips — rotate every 3.5s
@@ -1424,6 +1439,7 @@ display:none !important;
     let csTipIndex = 0
     const csTipEl = document.getElementById('cs-tip')
     if (csTipEl) {
+      csTipEl.textContent = csTips[0]   // set immediately — no blank flash
       setInterval(() => {
         csTipIndex = (csTipIndex + 1) % csTips.length
         csTipEl.style.opacity = '0'
