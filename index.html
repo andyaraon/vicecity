@@ -1100,12 +1100,27 @@ flex:0 0 auto;
 }
 
 /* Lock body when coming soon is active — hide ALL main site content */
+html.cs-html {
+overflow:hidden !important;
+height:100% !important;
+position:fixed;
+width:100%;
+}
 body.cs-active {
 overflow:hidden;
 height:100vh;
+position:fixed;
+width:100%;
 }
 body.cs-active > *:not(#cs-overlay) {
 display:none !important;
+}
+
+/* ── NAV MOBILE: hide overflow items so dots can’t appear ── */
+@media(max-width:600px){
+.nav-links { display:none !important; }
+.nav-btn   { display:none !important; }
+nav { padding:13px 16px; gap:10px; }
 }
 
   </style>
@@ -1119,7 +1134,7 @@ display:none !important;
   <div id="cs-overlay" class="cs-overlay">
     <div class="cs-content">
       <!-- Main PNG -->
-      <img src="./assets/coming-soon.png" class="cs-logo" alt="Something Coming Soon" fetchpriority="high" loading="eager" decoding="sync">
+      <img src="./assets/coming-soon.png" class="cs-logo" alt="" fetchpriority="high" loading="eager" decoding="sync">
 
 ```
   <!-- GTA-style loading bar -->
@@ -1262,7 +1277,7 @@ display:none !important;
   <div class="retro-stack">
 
     <!-- ARCADE MACHINE PNG — decorative, sits on top -->
-    <img src="./assets/arcade-machine.png" class="arcade-deco-png" alt="Arcade Machine">
+    <img src="./assets/arcade-machine.png" class="arcade-deco-png" alt="">
 
     <!-- UPLOAD CARD — same clean original layout -->
     <div class="upload-card">
@@ -1273,7 +1288,7 @@ display:none !important;
       <div class="up-row">
         <!-- Upload box -->
         <div class="up-box" id="retro-up-box">
-          <img id="retro-preview" class="up-preview" alt="preview">
+          <img id="retro-preview" class="up-preview" alt="">
           <div class="box-ic" id="retro-up-ic">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
           </div>
@@ -1284,7 +1299,7 @@ display:none !important;
 
         <!-- Output box -->
         <div class="out-box" id="retro-out-box">
-          <img id="retro-result" class="out-result" alt="result">
+          <img id="retro-result" class="out-result" alt="">
           <div class="box-ic" id="retro-out-ic">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
           </div>
@@ -1329,7 +1344,7 @@ display:none !important;
 
             <!-- Upload box -->
             <div class="ph-up" id="modern-up-box">
-              <img id="modern-preview" class="up-preview" alt="preview">
+              <img id="modern-preview" class="up-preview" alt="">
               <div class="ph-ic" id="modern-up-ic">
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
               </div>
@@ -1340,7 +1355,7 @@ display:none !important;
 
             <!-- Output box -->
             <div class="ph-out" id="modern-out-box">
-              <img id="modern-result" class="out-result" alt="result">
+              <img id="modern-result" class="out-result" alt="">
               <div class="ph-ic" id="modern-out-ic">
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
               </div>
@@ -1434,9 +1449,13 @@ display:none !important;
     // ── COMING SOON — hide if preview key present ────────────────────────────
     const urlParams = new URLSearchParams(window.location.search)
     if (urlParams.get('preview') === 'vice2025') {
+      document.documentElement.classList.remove('cs-html')
       document.body.classList.remove('cs-active')
       const csEl = document.getElementById('cs-overlay')
       if (csEl) csEl.style.display = 'none'
+    } else {
+      // Lock both html and body — fixes iOS Safari scroll-through bug
+      document.documentElement.classList.add('cs-html')
     }
 
     // GTA-style loading tips — rotate every 3.5s
