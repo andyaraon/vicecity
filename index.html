@@ -1007,15 +1007,13 @@ position:fixed;inset:0;z-index:9999;
 display:flex;flex-direction:column;
 align-items:center;justify-content:center;
 overflow:hidden;
+background:
+radial-gradient(ellipse 90% 60% at 50% 105%, rgba(255,45,120,.22) 0%, transparent 60%),
+radial-gradient(ellipse 55% 45% at 15% 15%, rgba(155,0,255,.14) 0%, transparent 55%),
+radial-gradient(ellipse 50% 40% at 85% 10%, rgba(0,240,255,.08) 0%, transparent 55%),
+linear-gradient(170deg, #06000F 0%, #0A0020 45%, #050010 100%);
 }
-.cs-bg-video {
-position:absolute;inset:0;
-width:100%;height:100%;
-object-fit:cover;
-filter:blur(22px) brightness(.55) saturate(1.3);
-transform:scale(1.08);
-pointer-events:none;
-}
+.cs-bg-video { display:none !important; }
 .cs-content {
 position:relative;z-index:2;
 display:flex;flex-direction:column;
@@ -1084,16 +1082,11 @@ animation:fUp .8s .25s ease both;
   <!-- Hidden via JS if URL has ?preview=vice2025 -->
 
   <div id="cs-overlay" class="cs-overlay">
-    <!-- Blurred background video -->
-    <video autoplay muted loop playsinline webkit-playsinline class="cs-bg-video">
-      <source src="./assets/bg-80s.mp4" type="video/mp4">
-    </video>
+    <div class="cs-content">
+      <!-- Main PNG -->
+      <img src="./assets/coming-soon.png" class="cs-logo" alt="Something Coming Soon">
 
 ```
-<div class="cs-content">
-  <!-- Main PNG -->
-  <img src="./assets/coming-soon.png" class="cs-logo" alt="Something Coming Soon">
-
   <!-- GTA-style loading bar -->
   <div class="cs-loading">
     <div class="cs-loading-track">
