@@ -927,16 +927,15 @@ html { scroll-behavior: smooth; }
   cursor:pointer;opacity:.32;
   transition:opacity .4s ease;
   flex-shrink:0;
-  /* NO overflow:hidden — it clips the drop-shadow glow */
+  /* NO overflow:hidden — clips the glow */
 }
 .logo-modern.on { opacity:1; }
 .logo-modern-png-nav {
   width:auto;
   height:34px;
-  /* screen blend kills dark PNG background on the dark nav */
   mix-blend-mode:screen;
   display:block;
-  /* contrast(20) crushes grey/brown bg to black so screen makes it invisible */
+  /* contrast(20) crushes brownish PNG background to black so screen hides it */
   filter:contrast(20) brightness(0.88) drop-shadow(0 0 0px transparent);
   transition:filter .4s ease;
 }
@@ -1644,7 +1643,30 @@ body.cs-active > *:not(#cs-overlay) {
       throw new Error('Timed out — try again')
     }
 
-    // ── Core transform flow (works for both modes) ────────────────────────────
+    // ── DAILY RATE LIMIT (5 transforms per user per day) ─────────────────────
+    const DAILY_LIMIT = 5
+
+    function getTodayKey() {
+      const d = new Date()
+      return 'vice_count_' + d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate()
+    }
+
+    function getDailyCount() {
+      return parseInt(localStorage.getItem(getTodayKey()) || '0', 10)
+    }
+
+    function incrementDailyCount() {
+      const key = getTodayKey()
+      const next = getDailyCount() + 1
+      localStorage.setItem(key, next)
+      return next
+    }
+
+    function getRemainingTransforms() {
+      return Math.max(0, DAILY_LIMIT - getDailyCount())
+    }
+
+        // ── Core transform flow (works for both modes) ────────────────────────────
     async function runTransform(els, mode) {
       const file = els.fileInput.files[0]
       if (!file) return
@@ -1652,6 +1674,16 @@ body.cs-active > *:not(#cs-overlay) {
       // 8 MB limit
       if (file.size > 8 * 1024 * 1024) {
         setStatus(els, 'MAX 8MB — RESIZE YOUR IMAGE', 'error')
+        return
+      }
+
+      // Daily limit check
+      if (getDailyCount() >= DAILY_LIMIT) {
+        const msg = mode === 'retro'
+          ? '✦ 5/5 DAILY LIMIT HIT — COME BACK TOMORROW ✦'
+          : '✦ Daily limit reached (5/5) — come back tomorrow ✦'
+        setStatus(els, msg, 'error')
+        els.xformBtn.disabled = true
         return
       }
 
@@ -1696,7 +1728,15 @@ body.cs-active > *:not(#cs-overlay) {
         els.outTx.style.display  = 'none'
         els.outBox.classList.remove('pulsing')
 
-        const doneMsg = mode === 'retro' ? '✦ VICE CITY MODE ACTIVATED ✦' : '✦ Vice City Mode Activated ✦'
+        // Count this successful transform against daily limit
+        const usedCount = incrementDailyCount()
+        const remaining = DAILY_LIMIT - usedCount
+        const remainingTxt = remaining > 0
+          ? (mode === 'retro' ? ` [${remaining} LEFT TODAY]` : ` · ${remaining} left today`)
+          : (mode === 'retro' ? ' [LAST ONE TODAY]' : ' · last one today')
+        const doneMsg = mode === 'retro'
+          ? '✦ VICE CITY MODE ACTIVATED ✦' + remainingTxt
+          : '✦ Vice City Mode Activated ✦' + remainingTxt
         setStatus(els, doneMsg, 'success')
 
         // Wire share + download buttons to the result URL
