@@ -18,16 +18,16 @@ exports.handler = async function(event) {
     }
 
     var imageDataUrl = "data:image/jpeg;base64," + imageBase64;
-    var retroPrompt = "In-game screenshot from Grand Theft Auto Vice City 2002, early 2000s RenderWare engine aesthetic. Convert the subject into a low-poly 3D character model with visible angular edges, blocky jawline, and flat low-resolution skin textures matching the original persons likeness and pose. Place them in a random Vice City location: a neon-lit club interior, gritty alleyway, sun-bleached pier, or suburban street. Background features low-poly environment assets: blurry palm trees, boxy vehicles, flat-shaded buildings. Heavy black ink cel-shaded outlines, vibrant 1980s Miami color palette of teal, magenta, neon pink, and sun-bleached yellow. Harsh flat lighting with strong shadows, chromatic aberration, backlit rim lighting, VHS grain, CRT monitor scanline overlay, visible aliasing and jagged edges, 4:3 aspect ratio, saturated high-contrast colors, authentic GTA Vice City game feel.";
+    var retroPrompt = "In-game screenshot from Grand Theft Auto: Vice City (2002), early 2000s 3D video game engine. Low-poly character model with visible angular edges on the face, blocky jawline, and flat skin textures. Low-resolution texture mapping. The character is placed in a random Vice City location—could be a gritty alleyway, a neon-lit interior of a club, a sun-bleached pier, or a suburban street. The background features generic 2000s-era low-poly environment assets: blurry palm trees, simple boxy vehicles, and flat-shaded buildings. Strong atmospheric 1980s Miami vibe. Harsh, simple lighting with flat shadows. High contrast, saturated colors (pinks, teals, oranges). Visible aliasing (jagged edges), slight motion blur, and a grainy CRT monitor overlay. 4:3 aspect ratio. Authentic RenderWare engine aesthetic.";
 
-    var modernPrompt = "High-end cinematic lifestyle photograph of the exact person from the uploaded image, placed inside the sprawling state of Leonida from Grand Theft Auto 6. The background location changes randomly each time: chaotic neon-lit strip club interior, sun-reddened Everglades airboat dock, high-traffic urban intersection with modern supercars, luxury poolside in Vice City, or gritty suburban backyard with palm shadows. Maintain exact photorealistic likeness of the subject with hyper-detailed skin textures, pores, and natural pose. Next-gen visual fidelity, ray-traced reflections on skin and surfaces, volumetric atmosphere, cinematic golden hour or hazy Florida sunset lighting, intense saturated colors, shallow depth of field with beautiful bokeh background, 35mm lens filmic texture, realistic skin subsurface scattering, 16:9 aspect ratio.";
+    var modernPrompt = "A high-end cinematic lifestyle photograph of a person, set in a completely random and unpredictable location within the sprawling state of Leonida. The setting changes every time: it could be a chaotic, neon-lit strip club interior, a sun-reddened Everglades airboat dock, a high-traffic urban intersection with modern supercars, a quiet luxury poolside in Vice City, or a gritty suburban backyard with palm shadows. The lighting matches the specific time of day: from harsh midday sun with deep shadows to the hazy, golden-pink humidity of a Florida sunset. Hyper-detailed character rendering with realistic skin textures, pores, and sweat. The subject is dressed in contemporary coastal fashion, posed naturally for a candid photo. Next-gen visual fidelity, ray-traced reflections on skin and surfaces, volumetric atmosphere, and intense, saturated colors. Shallow depth of field with a beautiful bokeh background. 16:9 aspect ratio, shot on 35mm lens, filmic texture.";
     var prompt = mode === "modern" ? modernPrompt : retroPrompt;
 
     console.log("Submitting to fal.ai queue...");
-    var queueRes = await fetch("https://queue.fal.run/fal-ai/flux/dev/image-to-image", {
+    var queueRes = await fetch("https://queue.fal.run/fal-ai/flux-pro/kontext/max", {
       method: "POST",
       headers: { "Authorization": "Key " + key, "Content-Type": "application/json" },
-      body: JSON.stringify({ image_url: imageDataUrl, prompt: prompt, strength: 0.85, num_inference_steps: 28, guidance_scale: 3.5, num_images: 1, image_size: "square" })
+      body: JSON.stringify({ image_url: imageDataUrl, prompt: prompt, enhance_prompt: false })
     });
     var queueData = await queueRes.json();
     console.log("Queue response:", JSON.stringify(queueData));
@@ -40,8 +40,8 @@ exports.handler = async function(event) {
     var responseUrl = queueData.response_url;
     console.log("Status URL:", statusUrl);
 
-    // Poll every 2s — fal.ai finishes in ~1.5s so should complete on first check
-    for (var i = 0; i < 4; i++) {
+    // Poll every 2s — Kontext Max typically takes 6-12s, up to 8 attempts (16s max)
+    for (var i = 0; i < 8; i++) {
       await new Promise(function(r) { setTimeout(r, 2000); });
       console.log("Polling attempt", i + 1, statusUrl);
 
