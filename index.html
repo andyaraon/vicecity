@@ -935,7 +935,6 @@ html { scroll-behavior: smooth; }
   height:34px;
   mix-blend-mode:screen;
   display:block;
-  /* contrast(20) crushes brownish PNG background to black so screen hides it */
   filter:contrast(20) brightness(0.88) drop-shadow(0 0 0px transparent);
   transition:filter .4s ease;
 }
@@ -1656,14 +1655,16 @@ body.cs-active > *:not(#cs-overlay) {
     }
 
     function incrementDailyCount() {
-      const key = getTodayKey()
+      const key  = getTodayKey()
       const next = getDailyCount() + 1
       localStorage.setItem(key, next)
       return next
     }
 
-    function getRemainingTransforms() {
-      return Math.max(0, DAILY_LIMIT - getDailyCount())
+    // Secret reset — visit ?reset=vice2025 to clear your daily count
+    if (urlParams.get('reset') === 'vice2025') {
+      localStorage.setItem(getTodayKey(), '0')
+      console.log('[VICE] Daily count reset ✓')
     }
 
         // ── Core transform flow (works for both modes) ────────────────────────────
@@ -1728,15 +1729,12 @@ body.cs-active > *:not(#cs-overlay) {
         els.outTx.style.display  = 'none'
         els.outBox.classList.remove('pulsing')
 
-        // Count this successful transform against daily limit
-        const usedCount = incrementDailyCount()
+        const usedCount  = incrementDailyCount()
         const remaining = DAILY_LIMIT - usedCount
-        const remainingTxt = remaining > 0
+        const remainTxt = remaining > 0
           ? (mode === 'retro' ? ` [${remaining} LEFT TODAY]` : ` · ${remaining} left today`)
           : (mode === 'retro' ? ' [LAST ONE TODAY]' : ' · last one today')
-        const doneMsg = mode === 'retro'
-          ? '✦ VICE CITY MODE ACTIVATED ✦' + remainingTxt
-          : '✦ Vice City Mode Activated ✦' + remainingTxt
+        const doneMsg = (mode === 'retro' ? '✦ VICE CITY MODE ACTIVATED ✦' : '✦ Vice City Mode Activated ✦') + remainTxt
         setStatus(els, doneMsg, 'success')
 
         // Wire share + download buttons to the result URL
