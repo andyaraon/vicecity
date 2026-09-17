@@ -1667,6 +1667,80 @@ body.cs-active > *:not(#cs-overlay) {
       console.log('[VICE] Daily count reset ✓')
     }
 
+        // ── WATERMARK — bakes $VICE branding onto every generated image ─────────
+    function applyWatermark(imageUrl, mode) {
+      return new Promise((resolve) => {
+        const img = new Image()
+        img.crossOrigin = 'anonymous'
+        img.onload = () => {
+          const canvas  = document.createElement('canvas')
+          canvas.width  = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+
+          // Draw the original image
+          ctx.drawImage(img, 0, 0)
+
+          // ── Text config ──────────────────────────────────────────────────
+          const isRetro   = mode === 'retro'
+          const mainText  = '$VICE ON SOL'
+          const subText   = 'vicecityonsol.xyz'
+          const padX      = img.width  * 0.035
+          const padY      = img.height * 0.035
+          const mainSize  = Math.round(img.width * 0.042)
+          const subSize   = Math.round(img.width * 0.022)
+          const font      = isRetro ? 'bold ' + mainSize + 'px "Press Start 2P", monospace'
+                                    : 'bold ' + mainSize + 'px "Bebas Neue", sans-serif'
+          const subFont   = isRetro ? (subSize) + 'px "VT323", monospace'
+                                    : 'bold ' + subSize + 'px "Rajdhani", sans-serif'
+
+          // ── Position — bottom left (GTA watermark style) ─────────────────
+          const x = padX
+          const yMain = img.height - padY - subSize - 6
+          const ySub  = img.height - padY
+
+          // ── Shadow / glow pass ───────────────────────────────────────────
+          ctx.font         = font
+          ctx.textBaseline = 'bottom'
+
+          if (isRetro) {
+            // Neon pink glow — retro mode
+            ctx.shadowColor   = '#FF2D78'
+            ctx.shadowBlur    = 18
+            ctx.fillStyle     = '#FF2D78'
+            ctx.fillText(mainText, x, yMain)
+            ctx.shadowBlur    = 8
+            ctx.fillStyle     = '#fff'
+            ctx.fillText(mainText, x, yMain)
+            ctx.font          = subFont
+            ctx.shadowColor   = '#00F0FF'
+            ctx.shadowBlur    = 10
+            ctx.fillStyle     = '#00F0FF'
+            ctx.fillText(subText, x, ySub)
+          } else {
+            // Gold glow — modern mode
+            ctx.shadowColor   = 'rgba(0,0,0,0.9)'
+            ctx.shadowBlur    = 12
+            ctx.fillStyle     = '#F5D060'
+            ctx.fillText(mainText, x, yMain)
+            ctx.shadowBlur    = 6
+            ctx.fillStyle     = '#fff'
+            ctx.fillText(mainText, x, yMain)
+            ctx.font          = subFont
+            ctx.shadowColor   = 'rgba(0,0,0,0.8)'
+            ctx.shadowBlur    = 8
+            ctx.fillStyle     = 'rgba(255,255,255,0.75)'
+            ctx.fillText(subText, x, ySub)
+          }
+
+          ctx.shadowBlur = 0
+          resolve(canvas.toDataURL('image/jpeg', 0.93))
+        }
+        img.onerror = () => resolve(imageUrl) // fallback: use original if canvas fails
+        img.src = imageUrl
+      })
+    }
+
         // ── Core transform flow (works for both modes) ────────────────────────────
     async function runTransform(els, mode) {
       const file = els.fileInput.files[0]
@@ -1722,8 +1796,9 @@ body.cs-active > *:not(#cs-overlay) {
 
         if (!outputUrl) throw new Error('No image returned from fal.ai')
 
-        // 4 — show result
-        els.result.src           = outputUrl
+        // 4 — apply watermark then show result
+        const watermarkedUrl     = await applyWatermark(outputUrl, mode)
+        els.result.src           = watermarkedUrl
         els.result.style.display = 'block'
         els.outIc.style.display  = 'none'
         els.outTx.style.display  = 'none'
@@ -1737,10 +1812,10 @@ body.cs-active > *:not(#cs-overlay) {
         const doneMsg = (mode === 'retro' ? '✦ VICE CITY MODE ACTIVATED ✦' : '✦ Vice City Mode Activated ✦') + remainTxt
         setStatus(els, doneMsg, 'success')
 
-        // Wire share + download buttons to the result URL
-        els.shareX.onclick   = () => shareImage(outputUrl, 'x')
-        els.shareTg.onclick  = () => shareTelegram(outputUrl)
-        if (els.downloadBtn) els.downloadBtn.onclick = () => downloadImage(outputUrl)
+        // Wire share + download to the watermarked version
+        els.shareX.onclick   = () => shareImage(watermarkedUrl, 'x')
+        els.shareTg.onclick  = () => shareTelegram(watermarkedUrl)
+        if (els.downloadBtn) els.downloadBtn.onclick = () => downloadImage(watermarkedUrl)
 
       } catch (err) {
         console.error('[transform]', err)
