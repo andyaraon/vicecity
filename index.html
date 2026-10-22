@@ -4,17 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>$VICE | Vice City on Solana</title>
-  <meta name="description" content="$VICE — Vice City on Solana. Transform yourself into a Vice City character and join the city.">
-  <link rel="canonical" href="https://vicecityonsol.xyz/">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://vicecityonsol.xyz/">
-  <meta property="og:title" content="$VICE | Vice City on Solana">
-  <meta property="og:description" content="Transform yourself into a Vice City character. Powered by Solana.">
-  <meta property="og:image" content="https://vicecityonsol.xyz/assets/logo-modern.png">
-  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Press+Start+2P&family=VT323&family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="./assets/coming-soon.png" fetchpriority="high">
   <link rel="preload" as="image" href="./assets/logo-80s.png" fetchpriority="high">
   <link rel="preload" as="image" href="./assets/logo-modern.png" fetchpriority="high">
   <style>
@@ -1033,6 +1026,112 @@ body.modern .glass-card { border-color:rgba(255,255,255,.08); }
   margin:0 auto;
 }
 
+/* ============================================================
+   COMING SOON OVERLAY
+============================================================ */
+.cs-overlay {
+  position:fixed;inset:0;z-index:9999;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  overflow:hidden;
+  font-size:0; /* kill whitespace text nodes */
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 105%, rgba(255,45,120,.22) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 45% at 15% 15%, rgba(155,0,255,.14) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 85% 10%, rgba(0,240,255,.08) 0%, transparent 55%),
+    linear-gradient(170deg, #06000F 0%, #0A0020 45%, #050010 100%);
+}
+.cs-bg-video { display:none !important; }
+.cs-content {
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:28px;padding:20px;
+  width:100%;max-width:600px;
+  font-size:1rem; /* restore after parent's font-size:0 */
+}
+.cs-logo {
+  width:clamp(280px,80vw,520px);
+  height:auto;
+  mix-blend-mode:screen;
+  filter:drop-shadow(0 0 30px rgba(255,92,43,.4)) drop-shadow(0 0 60px rgba(212,82,232,.25));
+  animation:fUp .8s ease both;
+}
+
+/* GTA loading bar */
+.cs-loading {
+  width:clamp(260px,75vw,480px);
+  display:flex;flex-direction:column;gap:10px;
+  animation:fUp .8s .15s ease both;
+}
+.cs-loading-track {
+  width:100%;height:3px;
+  background:rgba(255,255,255,.1);
+  border-radius:2px;
+  overflow:hidden;
+  position:relative;
+}
+.cs-loading-bar {
+  height:100%;
+  background:linear-gradient(90deg,#FF2D78,#FFB800,#FF5C2B);
+  border-radius:2px;
+  box-shadow:0 0 10px rgba(255,45,120,.7),0 0 20px rgba(255,184,0,.4);
+  animation:csLoad 4s cubic-bezier(.4,0,.2,1) infinite;
+  transform-origin:left;
+}
+@keyframes csLoad {
+  0%   { width:0%; opacity:1; }
+  85%  { width:97%; opacity:1; }
+  90%  { width:97%; opacity:.6; }
+  100% { width:0%;  opacity:0; }
+}
+.cs-tip {
+  font-family:'Rajdhani',sans-serif;
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:3px;
+  color:rgba(255,255,255,.38);
+  text-align:right;
+  text-transform:uppercase;
+  transition:opacity .5s ease;
+}
+
+/* Social buttons on CS page */
+.cs-socials {
+  display:flex;gap:10px;justify-content:center;
+  animation:fUp .8s .25s ease both;
+  padding:0 16px;
+  flex-wrap:wrap;
+  width:100%;
+}
+.cs-socials .soc-btn {
+  padding:10px 18px;
+  font-size:.75rem;
+  letter-spacing:1.5px;
+  flex:0 0 auto;
+}
+@media(max-width:420px){
+  .cs-socials { gap:8px; padding:0 12px; }
+  .cs-socials .soc-btn { padding:9px 14px; font-size:.7rem; letter-spacing:1px; }
+}
+
+/* Lock body when coming soon is active — hide ALL main site content */
+html.cs-html {
+  overflow:hidden !important;
+  height:100% !important;
+  position:fixed;
+  width:100%;
+}
+body.cs-active {
+  overflow:hidden;
+  height:100vh;
+  position:fixed;
+  width:100%;
+}
+body.cs-active > *:not(#cs-overlay) {
+  display:none !important;
+}
+
 /* ── NAV MOBILE: hide overflow items, keep mute always visible ── */
 @media(max-width:600px){
   .nav-links { display:none !important; }
@@ -1048,7 +1147,38 @@ body.modern .glass-card { border-color:rgba(255,255,255,.08); }
 
   </style>
 </head>
-<body class="retro">
+<body class="retro cs-active">
+
+  <!-- ================================================ COMING SOON OVERLAY -->
+  <!-- Hidden via JS if URL has ?preview=vice2025 -->
+  <div id="cs-overlay" class="cs-overlay">
+    <div class="cs-content">
+      <!-- Main PNG -->
+      <img src="./assets/coming-soon.png" class="cs-logo" alt="" fetchpriority="high" loading="eager" decoding="sync">
+
+      <!-- GTA-style loading bar -->
+      <div class="cs-loading">
+        <div class="cs-loading-track">
+          <div class="cs-loading-bar"></div>
+        </div>
+        <div class="cs-tip" id="cs-tip"></div>
+      </div>
+
+      <!-- Social buttons -->
+      <div class="cs-socials">
+        <a href="https://x.com/ViceCitySOLANA_" target="_blank" rel="noopener" class="soc-btn x-btn" title="Twitter / X">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://t.me/ViceCityOGonSOL" target="_blank" rel="noopener" class="soc-btn tg-btn" title="Telegram">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </a>
+        <a href="https://dexscreener.com/solana/3FmyGrJPLDVgDVwRVenuaq1xBwkZauP5TSskHRz72wSS" target="_blank" rel="noopener" class="soc-btn dex-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M3 3h7v2H5v14h14v-5h2v7H3V3zm11 0h7v7h-2V6.414l-9.293 9.293-1.414-1.414L17.586 5H14V3z"/></svg>
+          DEX
+        </a>
+      </div>
+    </div>
+  </div>
 
   <!-- 80s video background 
   <video id="bg-video" class="bg-video" autoplay muted loop playsinline webkit-playsinline>
@@ -1315,7 +1445,44 @@ body.modern .glass-card { border-color:rgba(255,255,255,.08); }
   <!-- ================================================ JS -->
   <script>
 
+    // ── COMING SOON — hide if preview key present ────────────────────────────
     const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('preview') === 'vice2025') {
+      document.documentElement.classList.remove('cs-html')
+      document.body.classList.remove('cs-active')
+      const csEl = document.getElementById('cs-overlay')
+      if (csEl) csEl.style.display = 'none'
+    } else {
+      // Lock both html and body — fixes iOS Safari scroll-through bug
+      document.documentElement.classList.add('cs-html')
+    }
+
+    // GTA-style loading tips — rotate every 3.5s
+    const csTips = [
+      'Loading Vice City assets...',
+      'Calibrating the neon grid...',
+      'Warming up the arcade cabinet...',
+      'Syncing blockchain nodes...',
+      'Preparing the Miami skyline...',
+      'Initializing Vice City protocols...',
+      'Rendering the 1986 sunset...',
+      'Establishing street connections...',
+      'Loading luxury assets...',
+      'Almost in the city...',
+    ]
+    let csTipIndex = 0
+    const csTipEl = document.getElementById('cs-tip')
+    if (csTipEl) {
+      csTipEl.textContent = csTips[0]   // set immediately — no blank flash
+      setInterval(() => {
+        csTipIndex = (csTipIndex + 1) % csTips.length
+        csTipEl.style.opacity = '0'
+        setTimeout(() => {
+          csTipEl.textContent = csTips[csTipIndex]
+          csTipEl.style.opacity = '1'
+        }, 400)
+      }, 3500)
+    }
 
     // ── THEME TOGGLE ─────────────────────────────────────────────────────────
     const tog  = document.getElementById('tog')
